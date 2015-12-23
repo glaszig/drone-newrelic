@@ -3,7 +3,7 @@
 [![Build Status](http://beta.drone.io/api/badges/drone-plugins/drone-newrelic/status.svg)](http://beta.drone.io/drone-plugins/drone-newrelic)
 [![](https://badge.imagelayers.io/plugins/drone-newrelic:latest.svg)](https://imagelayers.io/?images=plugins/drone-newrelic:latest 'Get your own badge on imagelayers.io')
 
-Drone plugin for deployment via New Relic.
+Drone plugin for posting deployment notifications to New Relic.
 
 ## Usage
 
