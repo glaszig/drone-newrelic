@@ -27,7 +27,9 @@ Drone plugin for posting deployment notifications to New Relic.
         "path": "/home/user/golang/src/github.com/drone-plugins/drone-newrelic"
     },
     "vargs": {
-        "tasks": "production deploy"
+        "license_key": "PXCmiqaFhhHILKr6tAFStVDCGsdsQ+41mE2W6ocpT34",
+        "app_name": "Acme",
+        "description": "Continuous deployment via Drone CI"
     }
 }
 EOF
@@ -63,7 +65,9 @@ docker run -i plugins/drone-newrelic <<EOF
         "path": "/home/user/golang/src/github.com/drone-plugins/drone-newrelic"
     },
     "vargs": {
-        "tasks": "production deploy"
+        "license_key": "PXCmiqaFhhHILKr6tAFStVDCGsdsQ+41mE2W6ocpT34",
+        "app_name": "Acme",
+        "description": "Continuous deployment via Drone CI"
     }
 }
 EOF
