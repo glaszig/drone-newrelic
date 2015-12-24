@@ -16,7 +16,7 @@ Defaults to `drone-ci`
 The following is a sample configuration in your .drone.yml file:
 
 ```yaml
-deploy:
+notify:
   newrelic:
     license_key: PXCmiqaFhhHILKr6tAFStVDCGsdsQ+41mE2W6ocpT34
     app_name: Acme

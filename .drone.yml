@@ -16,8 +16,8 @@ publish:
 
 plugin:
   name: New Relic
-  desc: Deploy software with New Relic
-  type: publish
+  desc: Send deployment notifications to New Relic
+  type: notify
   image: plugins/drone-newrelic
   labels:
     - ruby
