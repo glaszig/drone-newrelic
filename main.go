@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 
@@ -27,17 +28,7 @@ func main() {
 	plugin.Param("vargs", &vargs)
 	plugin.MustParse()
 
-	if len(vargs.LicenseKey) == 0 {
-		fmt.Println("Please provide your New Relic licencse key.")
-		os.Exit(1)
-		return
-	}
-
-	if len(vargs.ApplicationId) == 0 && len(vargs.AppName) == 0 {
-		fmt.Println("Please provide either application_id or app_name option.")
-		os.Exit(2)
-		return
-	}
+	validateArgs(vargs)
 
 	if len(vargs.User) == 0 {
 		vargs.User = "drone-ci"
@@ -52,14 +43,35 @@ func main() {
 
 	payload := bytes.NewBufferString(data.Encode())
 	request, _ := http.NewRequest("POST", newRelicDeploymentsEndpoint, payload)
+	request.Header.Add("User-Agent", fmt.Sprintf("Drone New Relic Plugin/%s", buildDate))
 	request.Header.Add("X-Api-Key", vargs.LicenseKey)
 	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	// request.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
 
 	fmt.Println("=> Posting deployment notification to New Relic")
-	fmt.Printf("%s\n", data.Encode())
+
+	if vargs.Debug {
+		dump, _ := httputil.DumpRequestOut(request, true)
+		fmt.Printf("%s\n\n", dump)
+	}
 
 	client := &http.Client{}
 	resp, _ := client.Do(request)
-	fmt.Printf("New Relic response code: %s\n", resp.Status)
+
+	if vargs.Debug {
+		fmt.Printf("=> Response: %s\n", resp.Status)
+	}
+}
+
+func validateArgs(vargs Params) {
+	if len(vargs.LicenseKey) == 0 {
+		fmt.Println("Please provide your New Relic licencse key.")
+		os.Exit(1)
+		return
+	}
+
+	if len(vargs.ApplicationId) == 0 && len(vargs.AppName) == 0 {
+		fmt.Println("Please provide either application_id or app_name option.")
+		os.Exit(2)
+		return
+	}
 }

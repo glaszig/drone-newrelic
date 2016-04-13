@@ -6,4 +6,5 @@ type Params struct {
 	Description   string `json:"description"`
 	ApplicationId string `json:"application_id"`
 	User          string `json:"user"`
+	Debug         bool   `json:"debug"`
 }
