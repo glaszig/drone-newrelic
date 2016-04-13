@@ -10,6 +10,7 @@ The following parameters are available:
 - `description` - Text annotation for the deployment — notes for you
 - `user` - The name of the user/process that triggered this deployment.  
 Defaults to `drone-ci`
+- `debug` - Prints the request payload and response code
 
 ## Example
 
