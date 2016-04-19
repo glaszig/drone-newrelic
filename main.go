@@ -13,13 +13,12 @@ import (
 )
 
 var (
-	build                       string
-	buildDate                   string
+	buildCommit                 string
 	newRelicDeploymentsEndpoint string = "https://api.newrelic.com/deployments.xml"
 )
 
 func main() {
-	fmt.Printf("Drone New Relic Plugin built at %s\n", buildDate)
+	fmt.Printf("Drone New Relic Plugin built from %s\n", buildCommit)
 
 	build := drone.Build{}
 	vargs := Params{}
@@ -43,7 +42,7 @@ func main() {
 
 	payload := bytes.NewBufferString(data.Encode())
 	request, _ := http.NewRequest("POST", newRelicDeploymentsEndpoint, payload)
-	request.Header.Add("User-Agent", fmt.Sprintf("Drone New Relic Plugin/%s", buildDate))
+	request.Header.Add("User-Agent", fmt.Sprintf("Drone New Relic Plugin/%s", buildCommit))
 	request.Header.Add("X-Api-Key", vargs.LicenseKey)
 	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
