@@ -63,7 +63,7 @@ func main() {
 }
 
 func validateArgs(vargs Params) {
-	if len(vargs.LicenseKey) == 0 {
+	if vargs.LicenseKey == "" {
 		fmt.Println("Please provide your New Relic licencse key.")
 		os.Exit(1)
 		return
