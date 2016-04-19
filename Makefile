@@ -1,13 +1,13 @@
-.PHONY: clean deps test build docker
+.PHONY: all clean deps fmt vet test docker
 
-export GOOS ?= linux
-export GOARCH ?= amd64
-export CGO_ENABLED ?= 0
+EXECUTABLE ?= drone-newrelic
+IMAGE ?= plugins/$(EXECUTABLE)
+COMMIT ?= $(shell git rev-parse --short HEAD)
 
-CI_BUILD_NUMBER ?= 0
+LDFLAGS = -X "main.buildCommit=$(COMMIT)"
+PACKAGES = $(shell go list ./... | grep -v /vendor/)
 
-LDFLAGS += -X "main.buildDate=$(shell date -u '+%Y-%m-%d %H:%M:%S %Z')"
-LDFLAGS += -X "main.build=$(CI_BUILD_NUMBER)"
+all: deps build test
 
 clean:
 	go clean -i ./...
@@ -15,11 +15,20 @@ clean:
 deps:
 	go get -t ./...
 
-test:
-	go test -cover ./...
+fmt:
+	go fmt $(PACKAGES)
 
-build:
-	go build -ldflags '-s -w $(LDFLAGS)'
+vet:
+	go vet $(PACKAGES)
+
+test:
+	@for PKG in $(PACKAGES); do go test -cover -coverprofile $$GOPATH/src/$$PKG/coverage.out $$PKG || exit 1; done;
 
 docker:
-	docker build --rm=true -t plugins/drone-newrelic .
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-s -w $(LDFLAGS)'
+	docker build --rm -t $(IMAGE) .
+
+$(EXECUTABLE): $(wildcard *.go)
+	go build -ldflags '-s -w $(LDFLAGS)'
+
+build: $(EXECUTABLE)
